@@ -1,0 +1,45 @@
+{
+  "rules": {
+    "registrations": {
+  
+      ".read": false,
+
+      "$registrationId": {
+       
+        ".write": "!data.exists()",
+
+      
+        ".validate": "newData.hasChildren(['name','sapid','year','email','phone','registeredAt'])",
+
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 80"
+        },
+        "sapid": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9]{8,12}$/)"
+        },
+        "year": {
+          ".validate": "newData.isString() && newData.val().matches(/^(1st|2nd|3rd|4th)$/)"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().matches(/^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$/) && newData.val().length <= 120"
+        },
+        "phone": {
+          ".validate": "newData.isString() && newData.val().length >= 7 && newData.val().length <= 20"
+        },
+        "registeredAt": {
+          ".validate": "newData.isString()"
+        },
+
+       
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+
+    "$other": {
+      ".read":  false,
+      ".write": false
+    }
+  }
+}
