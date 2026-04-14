@@ -1,26 +1,26 @@
 /* ═══════════════════════════════════════════════════
-   IEEE SPS — script.js (ES Module)
+   IEEE SPS — script.js (ES Module) - FIRESTORE VERSION
    Handles: canvas · page transitions · validation · Firebase
    ═══════════════════════════════════════════════════ */
 
 "use strict";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, query, orderByChild, equalTo, get }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+// FIRESTORE IMPORTS:
+import { getFirestore, collection, addDoc, query, where, getDocs }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
 /* ── FIREBASE INIT ───────────────────────────────── */
 let db = null;
 try {
   const app = initializeApp(firebaseConfig);
-  db = getDatabase(app);
+  db = getFirestore(app); // INITIALISE FIRESTORE
 } catch (err) {
   console.warn("Firebase not initialised — check firebase-config.js", err);
 }
 
 /* ── LUCIDE ICONS ────────────────────────────────── */
-// lucide global is loaded via UMD <script> in index.html
 if (typeof lucide !== "undefined") {
   lucide.createIcons();
 }
@@ -111,10 +111,7 @@ const page1 = document.getElementById("page-1");
 const page2 = document.getElementById("page-2");
 
 function goToPage2() {
-  // Exit page 1
   page1.classList.add("slide--exit");
-
-  // After exit transition, make page2 visible and animate in
   setTimeout(() => {
     page1.classList.add("slide--hidden");
     page1.classList.remove("slide--exit");
@@ -122,25 +119,19 @@ function goToPage2() {
 
     page2.classList.remove("slide--hidden");
     page2.classList.add("slide--enter");
-
-    // Scroll to top of new page
     window.scrollTo({ top: 0, behavior: "smooth" });
-
-    // Re-render lucide icons for page 2
     if (typeof lucide !== "undefined") lucide.createIcons();
   }, 320);
 }
 
 function goToPage1() {
   page2.classList.add("slide--exit");
-
   setTimeout(() => {
     page2.classList.add("slide--hidden");
     page2.classList.remove("slide--exit", "slide--enter");
 
     page1.style.position = "";
     page1.classList.remove("slide--hidden", "slide--exit");
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, 320);
 }
@@ -172,13 +163,12 @@ function setLoading(on) {
 const validators = {
   name:  v => v.trim().length >= 2 && /^[a-zA-Z\s'.,-]{2,80}$/.test(v.trim()),
   sapid: v => /^\d{8,12}$/.test(v.trim()),
-  year:  v => ["1st", "2nd", "3rd", "4th"].includes(v), // NEW: Validate year
+  year:  v => ["1st", "2nd", "3rd", "4th"].includes(v),
   email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
   phone: v => /^[+\d\s\-()]{7,15}$/.test(v.trim()),
 };
 
-// Rate-limit: track submission timestamps in sessionStorage
-const RATE_LIMIT_MS = 60_000; // 1 min between attempts
+const RATE_LIMIT_MS = 60_000;
 
 function isRateLimited() {
   const last = sessionStorage.getItem("sps_last_submit");
@@ -188,8 +178,6 @@ function isRateLimited() {
 function stampSubmit() {
   sessionStorage.setItem("sps_last_submit", Date.now().toString());
 }
-
-// Sanitise — strip HTML tags from strings before sending
 function sanitize(str) {
   return str.replace(/<[^>]*>/g, "").trim().slice(0, 200);
 }
@@ -201,11 +189,10 @@ if (form) {
 
     const name  = document.getElementById("name").value;
     const sapid = document.getElementById("sapid").value;
-    const year  = document.getElementById("year").value; // NEW: Get year value
+    const year  = document.getElementById("year").value;
     const email = document.getElementById("email").value;
     const phone = document.getElementById("phone").value;
 
-    // ── VALIDATION ────────────────────────────────
     if (!validators.name(name)) {
       showMessage("⚠ Please enter your full name (letters only, 2–80 chars).", "error");
       document.getElementById("name").focus(); return;
@@ -214,7 +201,7 @@ if (form) {
       showMessage("⚠ SAP ID must be 8–12 digits.", "error");
       document.getElementById("sapid").focus(); return;
     }
-    if (!validators.year(year)) { // NEW: Check if year is selected
+    if (!validators.year(year)) {
       showMessage("⚠ Please select your year of study.", "error");
       document.getElementById("year").focus(); return;
     }
@@ -227,7 +214,6 @@ if (form) {
       document.getElementById("phone").focus(); return;
     }
 
-    // ── CLIENT-SIDE RATE LIMIT ─────────────────────
     if (isRateLimited()) {
       showMessage("⚠ Please wait a moment before submitting again.", "error"); return;
     }
@@ -237,7 +223,7 @@ if (form) {
     const payload = {
       name:         sanitize(name),
       sapid:        sanitize(sapid),
-      year:         sanitize(year), // NEW: Add year to payload
+      year:         sanitize(year),
       email:        sanitize(email).toLowerCase(),
       phone:        sanitize(phone),
       registeredAt: new Date().toISOString(),
@@ -245,25 +231,22 @@ if (form) {
 
     try {
       if (db) {
-        // ── DUPLICATE SAP ID CHECK ─────────────────
-        const dupQuery = query(
-          ref(db, "registrations"),
-          orderByChild("sapid"),
-          equalTo(payload.sapid)
-        );
-        const snap = await get(dupQuery);
-        if (snap.exists()) {
+        // ── FIRESTORE: DUPLICATE SAP ID CHECK ─────────────────
+        const registrationsRef = collection(db, "registrations");
+        const dupQuery = query(registrationsRef, where("sapid", "==", payload.sapid));
+        const snap = await getDocs(dupQuery);
+
+        if (!snap.empty) {
           showMessage("⚠ This SAP ID is already registered.", "error");
           setLoading(false); return;
         }
 
-        // ── PUSH TO FIREBASE ───────────────────────
-        await push(ref(db, "registrations"), payload);
+        // ── FIRESTORE: ADD DOCUMENT ───────────────────────
+        await addDoc(registrationsRef, payload);
         stampSubmit();
         showMessage("✓ You're registered! See you at the event.", "success");
         form.reset();
       } else {
-        // Dev mode — Firebase not configured
         console.info("Dev mode — would have pushed:", payload);
         stampSubmit();
         showMessage("✓ Registered! (Firebase config not set up yet)", "success");
