@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IEEE SPS — Signal Processing Summit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=IBM+Plex+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated canvas background -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Noise overlay -->
+  <div class="noise-overlay"></div>
+
+  <!-- Scanlines overlay -->
+  <div class="scanlines"></div>
+
+  <div class="page-wrapper">
+
+    <!-- ═══════════════ HERO HEADER ═══════════════ -->
+    <header class="hero">
+      <div class="hero-top">
+        <div class="ieee-badge">
+          <span class="ieee-text">IEEE</span>
+          <span class="sps-text">SPS</span>
+        </div>
+        <div class="chapter-label">Signal Processing Society</div>
+      </div>
+
+      <!-- Event Logo Placeholder -->
+      <div class="logo-wrap">
+        <div class="logo-ring logo-ring-outer"></div>
+        <div class="logo-ring logo-ring-mid"></div>
+        <div class="logo-placeholder">
+          <div class="logo-inner">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-icon">
+              <path d="M10 40 Q20 15 30 40 Q40 65 50 40 Q60 15 70 40" stroke="#00f5ff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <circle cx="40" cy="40" r="6" fill="#7b2fff"/>
+              <circle cx="40" cy="40" r="3" fill="#00f5ff"/>
+            </svg>
+            <span class="logo-label">YOUR LOGO</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-title-block">
+        <p class="event-eyebrow">2026 &mdash; FLAGSHIP EVENT</p>
+        <h1 class="event-title">Event<span class="title-accent">Name</span></h1>
+        <p class="event-subtitle">A deep dive into the future of signal processing,<br>machine learning, and intelligent systems.</p>
+      </div>
+
+      <div class="event-meta">
+        <div class="meta-item">
+          <span class="meta-icon">◈</span>
+          <span class="meta-text">Date TBD</span>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <span class="meta-icon">◈</span>
+          <span class="meta-text">Venue TBD</span>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <span class="meta-icon">◈</span>
+          <span class="meta-text">Limited Seats</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══════════════ ABOUT SECTION ═══════════════ -->
+    <section class="about-section">
+      <div class="about-card">
+        <div class="about-tag">About the Event</div>
+        <p class="about-text">
+          SignalScape is IEEE SPS's premier technical gathering, bringing together students, researchers, and industry professionals to explore breakthroughs in signal processing, computer vision, audio engineering, and AI. Expect hands-on workshops, keynote sessions, project showcases, and networking with the sharpest minds in the field.
+        </p>
+        <div class="about-highlights">
+          <div class="highlight-chip">🎤 Keynotes</div>
+          <div class="highlight-chip">🛠 Workshops</div>
+          <div class="highlight-chip">🔬 Research Expo</div>
+          <div class="highlight-chip">🏆 Competition</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ REGISTRATION FORM ═══════════════ -->
+    <section class="form-section">
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="form-card-title">
+            <span class="form-title-line"></span>
+            <h2>Register Now</h2>
+            <span class="form-title-line"></span>
+          </div>
+          <p class="form-card-sub">Secure your spot before seats run out</p>
+          <div class="seats-indicator">
+            <div class="seats-bar">
+              <div class="seats-fill"></div>
+            </div>
+            <span class="seats-text">Filling fast</span>
+          </div>
+        </div>
+
+        <form id="registrationForm" novalidate>
+
+          <div class="field-group">
+            <label for="name" class="field-label">Full Name</label>
+            <div class="input-wrap">
+              <input type="text" id="name" placeholder="John Doe" required autocomplete="name" />
+              <span class="input-glow"></span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="sapid" class="field-label">SAP ID</label>
+            <div class="input-wrap">
+              <input type="text" id="sapid" placeholder="e.g. 5900XXXXX" required />
+              <span class="input-glow"></span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="email" class="field-label">Email Address</label>
+            <div class="input-wrap">
+              <input type="email" id="email" placeholder="you@example.com" required autocomplete="email" />
+              <span class="input-glow"></span>
+            </div>
+          </div>
+
+          <div class="field-group rsvp-group">
+            <label class="field-label">Will you attend?</label>
+            <div class="rsvp-toggle-row">
+              <span class="rsvp-option" id="rsvp-no-label">Not attending</span>
+              <label class="toggle-switch" aria-label="RSVP toggle">
+                <input type="checkbox" id="rsvpToggle" />
+                <span class="toggle-track">
+                  <span class="toggle-thumb"></span>
+                </span>
+              </label>
+              <span class="rsvp-option active" id="rsvp-yes-label">Attending ✓</span>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-text">REGISTER</span>
+            <span class="btn-arrow">→</span>
+            <span class="btn-shine"></span>
+          </button>
+
+        </form>
+
+        <div id="message" class="form-message" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>IEEE Signal Processing Society &bull; All rights reserved &copy; 2025</p>
+    </footer>
+
+  </div>
+
+<script type="module">
+  // 1. Import the base app
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+  
+  // 2. Import the Firestore Database functions
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBM883InnPvRNcJ8nexsCwMB7s07azwBv8",
+    authDomain: "sps-event.firebaseapp.com",
+    projectId: "sps-event",
+    storageBucket: "sps-event.firebasestorage.app",
+    messagingSenderId: "458242711775",
+    appId: "1:458242711775:web:c0cd304c70f119561c896a",
+    measurementId: "G-8C1DF9MKWP"
+  };
+
+  // Initialize Firebase App
+  const app = initializeApp(firebaseConfig);
+  
+  // Initialize Firestore Database
+  const db = getFirestore(app);
+
+  // 3. Define the push function that script.js is looking for
+  window.__firebasePush = async function(payload) {
+    try {
+      // This will create a collection named "registrations" in your database
+      const docRef = await addDoc(collection(db, "registrations"), payload);
+      console.log("Document written with ID: ", docRef.id);
+      return docRef;
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      throw e; // Throw the error so script.js can catch it and show the error UI
+    }
+  };
+</script>
+
+  <script src="script.js"></script>
+</body>
+</html>
