@@ -1,5 +1,4 @@
-# ── Firebase credentials — NEVER commit this ──────────
-firebase-config.js
+
 
 # ── macOS ──────────────────────────────────────────────
 .DS_Store
