@@ -47,24 +47,32 @@
             <div class="meta-divider"></div>
             <div class="meta-item">
               <i data-lucide="map-pin" class="meta-icon-svg"></i>
-              <span class="meta-text">Venue TBD</span>
+              <span class="meta-text">Room 1005</span>
             </div>
             <div class="meta-divider"></div>
             <div class="meta-item">
               <i data-lucide="clock" class="meta-icon-svg"></i>
-              <span class="meta-text">3:00 PM to 6:00 PM</span>
+              <span class="meta-text">3:00 PM onwards</span>
             </div>
           </div>
         </header>
+
+         <div class="nav-row">
+          <button class="next-btn" id="toFormBtn" aria-label="Proceed to registration">
+            <span class="btn-text">REGISTER FOR THE EVENT</span>
+            <span class="btn-icon-wrap">
+              <i data-lucide="arrow-right" class="btn-nav-icon"></i>
+            </span>
+            <span class="btn-shine"></span>
+          </button>
+          <p class="nav-hint">Takes less than a minute</p>
+        </div>
 
         <section class="about-section">
           <div class="about-card">
             <div class="about-tag">About the Event</div>
             <p class="about-text">
               The IEEE Student Chapter is pleased to invite you to B.U.I.L.D – Building Reliable Infrastructure & Deployment in Global Environments. </p>
-            <p class="about-text">
-  This is not just another workshop session — it is an opportunity to gain real-world exposure to how applications are deployed, managed, and debugged in professional environments. Participants will get the chance to work on practical deployment tasks, solve real-time issues, and experience the kind of challenges developers face in industry.
-</p>
 <div class="about-text">
   <p><strong>Learning Outcomes:</strong></p>
   <ul>
@@ -99,17 +107,6 @@
             </div>
           </div>
         </section>
-
-        <div class="nav-row">
-          <button class="next-btn" id="toFormBtn" aria-label="Proceed to registration">
-            <span class="btn-text">REGISTER FOR THE EVENT</span>
-            <span class="btn-icon-wrap">
-              <i data-lucide="arrow-right" class="btn-nav-icon"></i>
-            </span>
-            <span class="btn-shine"></span>
-          </button>
-          <p class="nav-hint">Takes less than a minute</p>
-        </div>
 
         <footer class="site-footer">
           <p>IEEE Signal Processing Society &bull; All rights reserved &copy; 2025</p>
@@ -154,7 +151,7 @@
                 <label for="name" class="field-label">Full Name</label>
                 <div class="input-wrap">
                   <i data-lucide="user" class="input-icon"></i>
-                  <input type="text" id="name" placeholder="John Doe"
+                  <input type="text" id="name" placeholder="Name"
                          required autocomplete="name" />
                   <span class="input-glow"></span>
                 </div>
@@ -164,7 +161,7 @@
                 <label for="sapid" class="field-label">SAP ID</label>
                 <div class="input-wrap">
                   <i data-lucide="badge" class="input-icon"></i>
-                  <input type="text" id="sapid" placeholder="e.g. 500XXXXXX"
+                  <input type="text" id="sapid" placeholder="e.g. 5900XXXXXX"
                          required inputmode="numeric" />
                   <span class="input-glow"></span>
                 </div>
